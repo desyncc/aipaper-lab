@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 736" width="1120" height="736"
+     role="img" aria-labelledby="t d">
+  <title id="t">Where the interesting code lives on a Viwoods AiPaper</title>
+  <desc id="d">Five layers: apps, system_server, native services, kernel and HAL, silicon, plus the
+  persistent stores the device keeps its calibration and firmware in. Accent outlines mark vendor
+  additions that are not stock Android.</desc>
+  <style>
+    .paper { fill: #fbfaf6; }
+    .band  { fill: #f2efe5; }
+    .box   { fill: #ffffff; stroke: #2a2921; stroke-width: 1.2; }
+    .box-v { stroke: #a83c22; stroke-width: 1.6; }
+    .box-d { stroke: #a83c22; stroke-width: 1.3; stroke-dasharray: 5 4; fill: #fffdf8; }
+    .ttl   { font: 600 12.5px ui-sans-serif, system-ui, sans-serif; fill: #17160f; }
+    .sub   { font: 10.5px ui-sans-serif, system-ui, sans-serif; fill: #5d5a50; }
+    .gut   { font: 600 9.5px ui-sans-serif, system-ui, sans-serif; fill: #5d5a50;
+             letter-spacing: .13em; }
+    .gut2  { font: 9.5px ui-sans-serif, system-ui, sans-serif; fill: #8b8779; }
+    .h     { font: 600 15px ui-sans-serif, system-ui, sans-serif; fill: #17160f; }
+    .acc   { font: 600 10.5px ui-sans-serif, system-ui, sans-serif; fill: #a83c22; }
+    .arrow { stroke: #8b8779; stroke-width: 1.2; fill: none; marker-end: url(#a); }
+    .leg   { font: 11px ui-sans-serif, system-ui, sans-serif; fill: #5d5a50; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b8779"/>
+    </marker>
+  </defs>
+
+  <rect class="paper" x="0" y="0" width="1120" height="736"/>
+  <text class="h" x="16" y="30">AiPaper (SE03) — where the interesting code lives</text>
+  <text class="sub" x="16" y="48">firmware 3.15.15 · Android 13 · MT8788 · userdebug + release-keys</text>
+
+  <!-- band backgrounds -->
+  <rect class="band" x="104" y="70"  width="1000" height="62" rx="4"/>
+  <rect class="band" x="104" y="196" width="1000" height="78" rx="4"/>
+  <rect class="band" x="104" y="290" width="1000" height="90" rx="4"/>
+  <rect class="band" x="104" y="396" width="1000" height="72" rx="4"/>
+  <rect class="band" x="104" y="484" width="1000" height="74" rx="4"/>
+  <rect class="band" x="104" y="574" width="1000" height="78" rx="4"/>
+
+  <!-- gutters -->
+  <text class="gut"  x="16" y="90">APPS</text>
+  <text class="gut2" x="16" y="106">stock + third-party</text>
+  <text class="gut"  x="16" y="216">FRAMEWORK</text>
+  <text class="gut2" x="16" y="232">system_server</text>
+  <text class="gut2" x="16" y="246">services.jar</text>
+  <text class="gut"  x="16" y="310">NATIVE</text>
+  <text class="gut2" x="16" y="326">/system/bin</text>
+  <text class="gut"  x="16" y="416">KERNEL</text>
+  <text class="gut2" x="16" y="432">HAL + drivers</text>
+  <text class="gut"  x="16" y="504">SILICON</text>
+  <text class="gut2" x="16" y="520">boards + panel</text>
+  <text class="gut"  x="16" y="594">STORES</text>
+  <text class="gut2" x="16" y="610">survive wipes</text>
+
+  <!-- APPS -->
+  <rect class="box" x="116" y="80" width="172" height="44" rx="3"/>
+  <text class="ttl" x="130" y="99">WiNote</text>
+  <text class="sub" x="130" y="113">notes · ink · sync</text>
+
+  <rect class="box" x="303" y="80" width="172" height="44" rx="3"/>
+  <text class="ttl" x="317" y="99">Settings</text>
+  <text class="sub" x="317" y="113">display modes · OTA</text>
+
+  <rect class="box" x="490" y="80" width="172" height="44" rx="3"/>
+  <text class="ttl" x="504" y="99">Files</text>
+  <text class="sub" x="504" y="113">cloud drives · picker</text>
+
+  <rect class="box" x="677" y="80" width="172" height="44" rx="3"/>
+  <text class="ttl" x="691" y="99">Wisky.AI</text>
+  <text class="sub" x="691" y="113">chat · OCR · rewrite</text>
+
+  <rect class="box" x="864" y="80" width="228" height="44" rx="3"/>
+  <text class="ttl" x="878" y="99">third-party</text>
+  <text class="sub" x="878" y="113">Chrome · KOReader · anything</text>
+
+  <!-- raven hook -->
+  <rect class="box-d" x="864" y="130" width="228" height="32" rx="3"/>
+  <text class="acc" x="876" y="150">Raven mode</text>
+  <text class="sub" x="950" y="150">framework.jar · per-app JSON</text>
+
+  <!-- FRAMEWORK -->
+  <rect class="box box-v" x="116" y="208" width="234" height="54" rx="3"/>
+  <text class="ttl" x="130" y="227">ENoteSettingService</text>
+  <text class="sub" x="130" y="241">binder “ENoteSetting” · 120+ codes</text>
+  <text class="sub" x="130" y="254">display · NVRAM · packages · lock</text>
+
+  <rect class="box box-v" x="365" y="208" width="234" height="54" rx="3"/>
+  <text class="ttl" x="379" y="227">EnoteDeviceCheckService</text>
+  <text class="sub" x="379" y="241">blacklist check on every network</text>
+  <text class="sub" x="379" y="254">persistent lock flag in NVRAM</text>
+
+  <rect class="box box-v" x="614" y="208" width="234" height="54" rx="3"/>
+  <text class="ttl" x="628" y="227">PackageManagerShell…</text>
+  <text class="sub" x="628" y="241">vendor gate on adb install / uninstall</text>
+  <text class="sub" x="628" y="254">one property unlocks it</text>
+
+  <rect class="box box-v" x="863" y="208" width="229" height="54" rx="3"/>
+  <text class="ttl" x="877" y="227">LockSettingsService</text>
+  <text class="sub" x="877" y="241">patched: credential changes are</text>
+  <text class="sub" x="877" y="254">redirected into the vendor UI</text>
+
+  <!-- NATIVE -->
+  <rect class="box box-v" x="116" y="302" width="380" height="66" rx="3"/>
+  <text class="ttl" x="130" y="321">/system/bin/surfaceflinger</text>
+  <text class="sub" x="130" y="336">EinkMessageHandler — 70 binder codes: modes, VCOM, LUTs, frame dumps</text>
+  <text class="sub" x="130" y="350">WritingProducer / WritingConsumer — the ink fast path</text>
+  <text class="sub" x="130" y="364">composes strokes → gray → dither, straight to the panel driver</text>
+
+  <rect class="box box-v" x="511" y="302" width="243" height="66" rx="3"/>
+  <text class="ttl" x="525" y="321">installd</text>
+  <text class="sub" x="525" y="336">updateWaveformFile: backs up the</text>
+  <text class="sub" x="525" y="350">current LUT, then swaps in a new one</text>
+  <text class="sub" x="525" y="364">as root, into a persistent partition</text>
+
+  <rect class="box box-v" x="769" y="302" width="323" height="66" rx="3"/>
+  <text class="ttl" x="783" y="321">/system/bin/wacom_update</text>
+  <text class="sub" x="783" y="336">runs once per boot: finds the newest pen</text>
+  <text class="sub" x="783" y="350">MCU image, flashes it over I²C, updates</text>
+  <text class="sub" x="783" y="364">the input device’s firmware version</text>
+
+  <!-- HAL -->
+  <rect class="box" x="116" y="408" width="234" height="48" rx="3"/>
+  <text class="ttl" x="130" y="427">hwcomposer.mt6771.so</text>
+  <text class="sub" x="130" y="441">normal layer composition</text>
+
+  <rect class="box box-v" x="365" y="408" width="234" height="48" rx="3"/>
+  <text class="ttl" x="379" y="427">EPDC driver</text>
+  <text class="sub" x="379" y="441">/dev/wisky_eink_pmic · ioctls</text>
+
+  <rect class="box box-v" x="614" y="408" width="234" height="48" rx="3"/>
+  <text class="ttl" x="628" y="427">/dev/wacom_w9013</text>
+  <text class="sub" x="628" y="441">pen input · pressure threshold</text>
+
+  <rect class="box" x="863" y="408" width="229" height="48" rx="3"/>
+  <text class="ttl" x="877" y="427">NVRAM HIDL</text>
+  <text class="sub" x="877" y="441">PRODUCT_INFO ↔ raw partition</text>
+
+  <!-- SILICON -->
+  <rect class="box" x="116" y="496" width="234" height="50" rx="3"/>
+  <text class="ttl" x="130" y="515">MT8788</text>
+  <text class="sub" x="130" y="529">octa-core SoC · Linux 4.19</text>
+
+  <rect class="box" x="365" y="496" width="234" height="50" rx="3"/>
+  <text class="ttl" x="379" y="515">E-ink panel</text>
+  <text class="sub" x="379" y="529">1920×2560 · factory LUT per batch</text>
+
+  <rect class="box box-v" x="614" y="496" width="234" height="50" rx="3"/>
+  <text class="ttl" x="628" y="515">W9013 pen MCU</text>
+  <text class="sub" x="628" y="529">I²C-3 @ 0x09 · own firmware</text>
+
+  <rect class="box" x="863" y="496" width="229" height="50" rx="3"/>
+  <text class="ttl" x="877" y="515">PMIC</text>
+  <text class="sub" x="877" y="529">panel bias (VCOM) · factory value</text>
+
+  <!-- STORES -->
+  <rect class="box box-v" x="116" y="586" width="234" height="54" rx="3"/>
+  <text class="ttl" x="130" y="605">proinfo · 3 MB</text>
+  <text class="sub" x="130" y="619">panel batch · VCOM · identity</text>
+  <text class="sub" x="130" y="632">no wipe touches it</text>
+
+  <rect class="box box-v" x="365" y="586" width="234" height="54" rx="3"/>
+  <text class="ttl" x="379" y="605">nvcfg/waveform</text>
+  <text class="sub" x="379" y="619">current + backup LUT</text>
+  <text class="sub" x="379" y="632">survives factory reset</text>
+
+  <rect class="box" x="614" y="586" width="234" height="54" rx="3"/>
+  <text class="ttl" x="628" y="605">super · A/B</text>
+  <text class="sub" x="628" y="619">system · vendor · product</text>
+  <text class="sub" x="628" y="632">verified boot, dm-verity</text>
+
+  <rect class="box" x="863" y="586" width="229" height="54" rx="3"/>
+  <text class="ttl" x="877" y="605">/data</text>
+  <text class="sub" x="877" y="619">notes DB · files · caches</text>
+  <text class="sub" x="877" y="632">file-based encrypted</text>
+
+  <!-- flow -->
+  <path class="arrow" d="M202 124 L202 208"/>
+  <path class="arrow" d="M482 262 L482 302"/>
+  <path class="arrow" d="M632 368 L632 408"/>
+  <path class="arrow" d="M732 456 L732 496"/>
+  <path class="arrow" d="M482 546 L482 586"/>
+  <path class="arrow" d="M978 472 L978 586"/>
+
+  <!-- legend -->
+  <rect class="box" x="116" y="676" width="26" height="14" rx="2"/>
+  <text class="leg" x="150" y="687">stock-ish component</text>
+  <rect class="box box-v" x="316" y="676" width="26" height="14" rx="2"/>
+  <text class="leg" x="350" y="687">vendor addition, or undocumented</text>
+  <rect class="box-d" x="606" y="676" width="26" height="14" rx="2"/>
+  <text class="leg" x="640" y="687">config-only hook (a JSON file is the whole interface)</text>
+  <text class="leg" x="16" y="712">Layers are not a strict stack: apps reach ENoteSetting directly, and the ink</text>
+  <text class="leg" x="16" y="727">path reaches the panel driver without passing through the composer above it.</text>
+</svg>

@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+
+const repos = [
+  {
+    name: 'inkbridge',
+    href: 'https://github.com/desyncc/inkbridge',
+    status: 'public',
+    what: 'Mirrors the tablet\u2019s notebooks into an Obsidian vault: exports pages, transcribes handwriting, and injects daily journal entries. The most usable thing to come out of this work.',
+  },
+  {
+    name: 'viwoods-mcp',
+    href: 'https://github.com/desyncc/viwoods-mcp',
+    status: 'public',
+    what: 'The same notebooks over MCP, so an agent can read them behind a folder allow/deny list.',
+  },
+  {
+    name: 'paper-console',
+    href: null,
+    status: 'private, for now',
+    what: 'A handwriting-to-assistant console with a small on-device daemon. It is the project that forced most of the findings here; publishing it needs a scrub pass first.',
+  },
+  {
+    name: 'viwoods (the SDK)',
+    href: null,
+    status: 'private, for now',
+    what: 'Builds, reads and pre-flights .note files, parses the app\u2019s database, and drives import/append/move/purge against a device. 170 offline tests, ~99% coverage, and a live check that fingerprints every row so it can prove it changed nothing else.',
+  },
+];
+---
+
+<Base title="Code" description="What is public, what is private, and why.">
+  <h1>Code</h1>
+  <p class="lede">
+    Some of this is usable today. Some of it is deliberately not published, either because it is
+    entangled with a device I own or because publishing it would be a security decision I am not
+    making.
+  </p>
+
+  <ul class="plain">
+    {repos.map((r) => (
+      <li>
+        <span class="claim">{r.href ? <a href={r.href}>{r.name}</a> : r.name}</span>
+        <span class="chip" style="margin-left:.5rem">{r.status}</span>
+        <p style="margin:.3rem 0 0">{r.what}</p>
+      </li>
+    ))}
+  </ul>
+
+  <h2>Why the SDK is not public yet</h2>
+  <p>
+    It is the piece I am proudest of and the piece with the highest bar: it writes into a device
+    database, so its safety rules matter more than its features. The rules it enforces are taken
+    from the app itself — the exact predicate the app uses for "this notebook has been to the
+    cloud", the app's own quiescence signal before a snapshot, one import at a time because the
+    importer deletes its own temp files. Before that ships, it needs its tests and its guards
+    published together, not just the happy path.
+  </p>
+  <p>
+    If you want to poke at the format, <a href="/posts/note-format/">the post</a> documents the
+    container, the tables and the gates. That is the part that is worth reading first anyway.
+  </p>
+</Base>

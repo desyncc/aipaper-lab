@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+---
+
+<Base title="Posts" description="Longer write-ups on the AiPaper's internals.">
+  <h1>Posts</h1>
+  <p class="lede">Longer write-ups. Each one is a claim I can demonstrate, not a summary of one.</p>
+
+  <ul class="plain">
+    {posts.map((post) => (
+      <li>
+        <a href={`/posts/${post.id}/`}><span class="claim">{post.data.title}</span></a>
+        {post.data.status === 'draft' && <span class="chip accent" style="margin-left:.5rem">draft</span>}
+        <div class="meta"><span class="date">{fmt.format(post.data.date)}</span></div>
+        <p style="margin:.3rem 0 0">{post.data.summary}</p>
+      </li>
+    ))}
+  </ul>
+</Base>

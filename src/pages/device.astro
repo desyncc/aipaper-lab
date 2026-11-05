@@ -1,0 +1,124 @@
+---
+import Base from '../layouts/Base.astro';
+
+const layers = [
+  {
+    n: 'Apps',
+    owner: 'WiNote (Paper), Settings, Files, Wisky.AI, your browser',
+    what: 'Ordinary Android apps, except that several share the system UID and one file-selection flow is pinned by component name.',
+    how: 'read',
+  },
+  {
+    n: 'Framework',
+    owner: 'system_server, services.jar',
+    what: 'Patched AOSP: a vendor hardware bridge, a device-check service, a package-install gate, and a lock-credential redirect.',
+    how: 'read + probed',
+  },
+  {
+    n: 'Native',
+    owner: 'surfaceflinger, installd, wacom_update',
+    what: 'The ink pipeline and its 70 transaction codes live in the compositor; waveform installs run through installd; the pen MCU is flashed at boot.',
+    how: 'read (disassembly) + probed',
+  },
+  {
+    n: 'Kernel and HAL',
+    owner: 'hwcomposer.mt6771, EPDC driver, input, NVRAM',
+    what: 'Panel bias via a character device, pen input as an ordinary input device, calibration records via a HIDL service.',
+    how: 'read + probed',
+  },
+  {
+    n: 'Silicon',
+    owner: 'MT8788, the panel, a W9013 pen MCU, a PMIC',
+    what: 'The panel is chosen by an 8-character batch string; the pen microcontroller has its own flash and firmware.',
+    how: 'read + probed',
+  },
+];
+
+const boot = [
+  ['preloader', 'first-stage, loads the bootloader', 'probed'],
+  ['lk (little kernel)', 'AVB 1.2 verification, fastboot, slot selection', 'read (disassembly)'],
+  ['boot', 'kernel + ramdisk', 'read'],
+  ['system / vendor / product', 'dynamic partitions inside super, dm-verity', 'read + probed'],
+];
+---
+
+<Base title="The device" description="A layer-by-layer map of a Viwoods AiPaper: boot chain, root, system services, the ink pipeline, the panel and the pen." wide={true}>
+  <h1>The device</h1>
+  <p class="lede">
+    A Viwoods AiPaper: 10.3&Prime; e-ink, Android 13, firmware 3.15.15, MediaTek MT8788, a Wacom pen
+    digitizer. Nothing here is a teardown — it is all read out of the shipped software and confirmed
+    on the device.
+  </p>
+
+  <figure>
+    <img src="/diagrams/device-map.svg" width="1120" height="736"
+         alt="Layer diagram: apps, system_server, native services, kernel and HAL, silicon, and the persistent stores, with vendor additions marked." />
+    <figcaption>
+      Accent outlines are places where the vendor replaced or extended stock Android. The dashed box
+      is a hook whose entire interface is a JSON file.
+    </figcaption>
+  </figure>
+
+  <h2>The five layers</h2>
+  <table>
+    <thead><tr><th>Layer</th><th>Who owns it</th><th>What is interesting there</th><th>How</th></tr></thead>
+    <tbody>
+      {layers.map((l) => (
+        <tr>
+          <td><strong>{l.n}</strong></td>
+          <td>{l.owner}</td>
+          <td>{l.what}</td>
+          <td class="meta">{l.how}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <h2>Boot, and where root comes from</h2>
+  <p>
+    This is the part that surprised me most. The build is a <code>userdebug</code> product signed
+    with release keys, and the setuid <code>su</code> binary is part of the signed system image — so
+    root over adb works while the bootloader stays locked, verified boot reports <code>green</code>,
+    and <code>dm-verity</code> stays enforcing. No partition is modified to get there.
+  </p>
+  <table>
+    <thead><tr><th>Stage</th><th>Role</th><th>How</th></tr></thead>
+    <tbody>
+      {boot.map(([s, r, h]) => (
+        <tr><td><code>{s}</code></td><td>{r}</td><td class="meta">{h}</td></tr>
+      ))}
+    </tbody>
+  </table>
+  <p>
+    Two details worth knowing if you own one: the unlock confirmation normally wants a physical
+    keypress, and this tablet has no volume rocker, so the bootloader also takes a token over
+    fastboot; and the "unlock allowed" flag lives in the last four bytes of the <code>frp</code>
+    partition.
+  </p>
+
+  <h2>The private ink pipeline</h2>
+  <p>
+    The compositor is not only a compositor. It hosts two extra binder services — one publishes a
+    buffer queue for stroke rendering, one consumes it — plus a transaction table of roughly seventy
+    codes covering refresh mode, panel bias, waveform install, the ghosting filter, and a debug hook
+    that dumps the current grayscale framebuffer to a PNG.
+  </p>
+  <p>
+    A stroke does not go through the window manager. It lands in a dedicated 1920&times;2560 buffer,
+    gets converted to grayscale on the GPU and dithered, and is pushed to the panel driver without
+    waiting for composition or a presentation fence. While the pen is down, full-screen refreshes
+    are deferred; when it lifts, a high-quality refresh reconciles whatever the background apps were
+    doing.
+  </p>
+  <p>
+    That is a second display pipeline, built for one input device, living inside a binary that is
+    otherwise AOSP. It is the most interesting thing in the image.
+  </p>
+
+  <h2>Read the reference</h2>
+  <p>
+    The layer-by-layer detail — including the waveform check, the persistent calibration record, and
+    the remote-lock path — is in <a href="/docs/platform/">the platform reference</a>, with the
+    evidence label on every row.
+  </p>
+</Base>

@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+  return docs.map((doc) => ({ params: { slug: doc.id }, props: { doc } }));
+}
+
+const { doc } = Astro.props;
+const { Content } = await render(doc);
+---
+
+<Base title={doc.title} description={doc.summary}>
+  <article>
+    <p class="meta">Reference</p>
+    <h1>{doc.title}</h1>
+    <p class="lede">{doc.summary}</p>
+    <hr />
+    <Content />
+  </article>
+  <p style="margin-top:3rem"><a href="/device">← the device map</a></p>
+</Base>

@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+---
+
+<Base title="AiPaper Lab" description="Notes from inside a locked e-ink tablet: root, a note format, a private ink pipeline, and an audit.">
+  <h1>A locked e-ink tablet, opened up</h1>
+  <p class="lede">
+    Research notes on a Viwoods AiPaper: what the vendor built on top of stock Android, how I
+    know, and what a curious owner can do about it.
+  </p>
+
+  <p>
+    This is a personal archive. The device is a 10.3&Prime; e-ink tablet running Android 13 with a
+    pen, a proprietary notebook format, a vendor display stack, and more undocumented privilege than
+    it should have. I took it apart — the software, the firmware, the display pipeline — and wrote
+    down the parts that were interesting.
+  </p>
+
+  <div class="cards">
+    <a class="card" href="/device">
+      <strong>The device</strong>
+      <span>Boot chain, root, system services, the ink pipeline, the panel, the pen — layer by layer.</span>
+    </a>
+    <a class="card" href="/ten">
+      <strong>Ten surprises</strong>
+      <span>The claims that make people say "wait, what", each linked to how it was checked.</span>
+    </a>
+    <a class="card" href="/posts/">
+      <strong>Posts</strong>
+      <span>Longer write-ups: the note format, the audit, and whatever comes next.</span>
+    </a>
+    <a class="card" href="/code">
+      <strong>Code</strong>
+      <span>What is public, what is private, and why.</span>
+    </a>
+  </div>
+
+  <h2>Posts</h2>
+  <ul class="plain">
+    {posts.map((post) => (
+      <li>
+        <a href={`/posts/${post.id}/`}><span class="claim">{post.data.title}</span></a>
+        {post.data.status === 'draft' && <span class="chip accent" style="margin-left:.5rem">draft</span>}
+        <div class="meta"><span class="date">{fmt.format(post.data.date)}</span></div>
+        <p style="margin:.3rem 0 0">{post.data.summary}</p>
+      </li>
+    ))}
+  </ul>
+
+  <div class="note">
+    <strong>How to read a claim here.</strong> Every non-obvious statement says how it was checked:
+    read in a decompile or disassembly, observed on the device, or merely a string-table lead. A
+    claim with no label is an opinion, and I try not to write those.
+  </div>
+</Base>

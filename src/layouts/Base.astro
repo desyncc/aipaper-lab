@@ -1,0 +1,73 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  wide?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = 'Notes from inside a locked e-ink tablet.',
+  wide = false,
+  noindex = false,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const nav = [
+  { href: '/device', label: 'Device' },
+  { href: '/ten', label: 'Ten surprises' },
+  { href: '/posts/', label: 'Posts' },
+  { href: '/code', label: 'Code' },
+];
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title === 'AiPaper Lab' ? title : `${title} — AiPaper Lab`}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+  </head>
+  <body>
+    <header class="site">
+      <div class="wrap">
+        <a class="brand" href="/">AiPaper Lab <span>— a Viwoods AiPaper, opened up</span></a>
+        <nav class="site">
+          {nav.map((item) => (
+            <a href={item.href} aria-current={here.startsWith(item.href.replace(/\/$/, '')) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
+    <main class={`wrap ${wide ? 'wide' : ''}`}>
+      <slot />
+    </main>
+    <footer class="site">
+      <div class="wrap">
+        <p>
+          Unofficial fan research on a device I own. Not made by, affiliated with, or endorsed by
+          Viwoods or Wisky. No vendor binaries, keys, captures or personal content are published here.
+        </p>
+        <p>
+          Ten surprises are <a href="/ten">here</a>; the layer-by-layer reference is
+          <a href="/device">here</a>. Every claim says how it was checked.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

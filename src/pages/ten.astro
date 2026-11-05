@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro';
+
+const claims = [
+  {
+    t: 'Root ships inside the signed system image, and verified boot still reports green.',
+    d: 'A setuid su binary is part of the release build, so a locked bootloader and an enforcing dm-verity do not stop root over adb. Nothing had to be flashed to get it.',
+    href: '/docs/platform/#boot',
+    tag: 'read + probed',
+  },
+  {
+    t: 'The tablet has no volume buttons, so the bootloader also accepts a typed unlock token.',
+    d: 'Unlocking normally requires pressing a physical key to confirm. This one takes a fastboot command instead — and the unlock-permission flag lives in the last four bytes of a partition.',
+    href: '/docs/platform/#boot',
+    tag: 'read',
+  },
+  {
+    t: 'The vendor can disable the device remotely, and the flag survives a factory reset.',
+    d: 'A blacklist answer written into a raw calibration partition triggers a non-dismissible lock and a five-minute shutdown. No wipe touches that partition.',
+    href: '/docs/platform/#killswitch',
+    tag: 'read + probed',
+  },
+  {
+    t: 'Any app on the device can act as the system user.',
+    d: 'A vendor service in system_server clears the caller identity and never checks who called, and the SELinux policy lets untrusted apps reach it.',
+    href: '/docs/platform/#services',
+    tag: 'read + probed',
+  },
+  {
+    t: 'One exported provider will open any file path you hand it.',
+    d: 'The whole implementation is "read the path out of the URI, open it". No permission, no validation, same UID as the app that owns the AI chat history.',
+    href: '/posts/audit/#providers',
+    tag: 'read',
+  },
+  {
+    t: 'The platform signing key is AOSP\u2019s public test key.',
+    d: 'While the build advertises release keys, several product apps — one of them sharing the system UID — are signed with the well-known public key from AOSP.',
+    href: '/docs/platform/#signing-key',
+    tag: 'read + probed',
+  },
+  {
+    t: 'The compositor hosts 70 undocumented binder codes, including a frame dump.',
+    d: 'Display modes, panel bias voltage, waveform install, ghosting filter, and a debug hook that writes the current grayscale framebuffer to a PNG.',
+    href: '/docs/platform/#ink-bus',
+    tag: 'read (disassembly) + probed',
+  },
+  {
+    t: 'Handwriting bypasses the window manager entirely.',
+    d: 'A dedicated buffer queue carries strokes to the compositor, which pushes them to the panel driver without waiting for composition or vsync. Full-screen refreshes are deferred while the pen is down.',
+    href: '/docs/platform/#ink-bus',
+    tag: 'read (disassembly)',
+  },
+  {
+    t: 'The panel\u2019s waveform is a file you can replace, guarded by a key in the same binary.',
+    d: 'Twenty-three LUTs ship on disk, one per panel batch. The installer checks a SHA-256 digest that arrives AES-encrypted with a constant key and IV found in the compositor.',
+    href: '/docs/platform/#waveform',
+    tag: 'read + probed',
+  },
+  {
+    t: 'The pen is a Cortex-M microcontroller with its own firmware and flasher.',
+    d: 'A Wacom W9013 on I\u00B2C, flashed at every boot from an Intel HEX file in the product partition, serving its own HID descriptor. The factory image is right there on disk.',
+    href: '/docs/platform/#pen',
+    tag: 'read + probed',
+  },
+];
+
+const bonus = {
+  t: 'Bonus: the note format is documented by the app\u2019s own importer.',
+  d: 'A Python function builds a .note file the tablet accepts, because the importer is a specification that fails loudly — and because the vendor\u2019s page-copy pipeline enumerates every resource a page can carry.',
+  href: '/posts/note-format/',
+  tag: 'read + probed',
+};
+---
+
+<Base title="Ten surprises" description="Ten things this e-ink tablet does that you would not guess, each with how it was checked.">
+  <h1>Ten surprises</h1>
+  <p class="lede">
+    Things this tablet does that you would not guess from the outside. Each one links to the
+    reference section behind it, with its evidence label.
+  </p>
+
+  <ol class="plain" style="list-style:none;counter-reset:c;padding:0">
+    {claims.map((c, i) => (
+      <li style="counter-increment:c">
+        <div style="display:flex;gap:.75rem;align-items:baseline">
+          <span class="meta date" style="min-width:1.5rem">{String(i + 1).padStart(2, '0')}</span>
+          <div>
+            <a href={c.href}><span class="claim">{c.t}</span></a>
+            <p style="margin:.3rem 0 .2rem">{c.d}</p>
+            <div class="meta">{c.tag}</div>
+          </div>
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <hr />
+
+  <ul class="plain">
+    <li>
+      <a href={bonus.href}><span class="claim">{bonus.t}</span></a>
+      <p style="margin:.3rem 0 .2rem">{bonus.d}</p>
+      <div class="meta">{bonus.tag}</div>
+    </li>
+  </ul>
+
+  <div class="note">
+    No vendor binaries, key material, identifiers or captures are published. Security items are
+    described by class of problem and fix direction only — see the
+    <a href="/posts/audit/">audit</a>.
+  </div>
+</Base>
